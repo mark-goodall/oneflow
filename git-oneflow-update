@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$1" = "--h" ]] ; then
    echo "Updates the oneflow toolset to the latest version: ";
