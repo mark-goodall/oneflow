@@ -104,7 +104,7 @@ fi
 
 git checkout $masterBranch
 
-if [[ $branch =~ ^feature.* ]]; then	
+if [[ $branch =~ ^(feature|issue).* ]]; then	
 	echo "Do you wish to: "
 	select opt in "Merge to $masterBranch" "Create a pull request"; do
 		case $opt in
@@ -112,12 +112,13 @@ if [[ $branch =~ ^feature.* ]]; then
 			"Create a pull request" ) create_pullrequest $branch; exit 0; break;;
 		esac
 	done
-elif [[ $branch =~ ^issue.* ]]; then
-	echo "Merging to $masterBranch"
-	git merge --no-ff $branch -m "Resolving issue #$shortBranch"
-	git push origin $masterBranch
-else
-	mergetomaster $masterBranch $branch
+# MG: If we have an issue branch we still want to be asked to create a pull request not merge directly into master!?
+#elif [[ $branch =~ ^issue.* ]]; then
+#	echo "Merging to $masterBranch"
+#	git merge --no-ff $branch -m "Resolving issue #$shortBranch"
+#	git push origin $masterBranch
+#else
+#	mergetomaster $masterBranch $branch
 fi
 
 cleanup_localbranch $branch
