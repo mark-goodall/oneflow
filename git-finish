@@ -105,13 +105,17 @@ fi
 git checkout $masterBranch
 
 if [[ $branch =~ ^(feature|issue).* ]]; then	
-	echo "Do you wish to: "
-	select opt in "Merge to $masterBranch" "Create a pull request"; do
-		case $opt in
-			"Merge to $masterBranch" ) mergetomaster $masterBranch $branch; break;;
-			"Create a pull request" ) create_pullrequest $branch; exit 0; break;;
-		esac
-	done
+  # We should never merge into master from this script for a feature|issue -> we can instead use github to do it manually
+  # Here should just always create a pull request
+  echo "Create a pull request"
+  create_pullrequest $branch; exit 0;
+	#echo "Do you wish to: "
+	#select opt in "Merge to $masterBranch" "Create a pull request"; do
+	#	case $opt in
+	#		"Merge to $masterBranch" ) mergetomaster $masterBranch $branch; break;;
+	#		"Create a pull request" ) create_pullrequest $branch; exit 0; break;;
+	#	esac
+	#done
 # MG: If we have an issue branch we still want to be asked to create a pull request not merge directly into master!?
 #elif [[ $branch =~ ^issue.* ]]; then
 #	echo "Merging to $masterBranch"
