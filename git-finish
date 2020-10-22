@@ -127,8 +127,8 @@ if [[ $branch =~ ^(feature|issue).* ]]; then
 #	echo "Merging to $masterBranch"
 #	git merge --no-ff $branch -m "Resolving issue #$shortBranch"
 #	git push origin $masterBranch
-#else
-#	mergetomaster $masterBranch $branch
+else
+	mergetomaster $masterBranch $branch
 fi
 
 cleanup_localbranch $branch
