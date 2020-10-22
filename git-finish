@@ -27,24 +27,30 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 shortBranch=$(echo $branch| cut -d'/' -f 2)
 
 cleanup_localbranch () {
-echo "Do you wish to delete the local branch $1?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) echo "Cleaning up local branch"; git branch -D $1; break;;
-        No ) break;;
-    esac
-done
+echo "Delete the local branch $1"
+git branch -D $1;
+# This code should be called once we are ready to FINISH of a release|hotfix branch -> there should be no reason at that point to keep these alive
+# Just clean up the local branch without providing a user option as this causes issues when run alongside gita
+#select yn in "Yes" "No"; do
+#    case $yn in
+#        Yes ) echo "Cleaning up local branch"; git branch -D $1; break;;
+#        No ) break;;
+#    esac
+#done
 }
 
 cleanup_remotebranch () {
 if [[ "$(git branch -a | egrep "remotes/origin/$1" | wc -l)" = "1" ]]; then
-    echo "Do you wish to delete the remote branch remotes/origin/$1?"
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes ) echo "Cleaning up remote branch"; git push origin :$1; break;;
-            No ) break;;
-        esac
-    done	
+    # This code should be called once we are ready to FINISH of a release|hotfix branch -> there should be no reason at that point to keep these alive
+    # Just clean up the local branch without providing a user option as this causes issues when run alongside gita  
+    echo "Delete the remote branch remotes/origin/$1"
+    git push origin :$1;
+    #select yn in "Yes" "No"; do
+    #    case $yn in
+    #        Yes ) echo "Cleaning up remote branch"; git push origin :$1; break;;
+    #        No ) break;;
+    #    esac
+    #done	
 fi
 }
 
