@@ -29,14 +29,6 @@ shortBranch=$(echo $branch| cut -d'/' -f 2)
 cleanup_localbranch () {
 echo "Delete the local branch $1"
 git branch -D $1;
-# This code should be called once we are ready to FINISH of a release|hotfix branch -> there should be no reason at that point to keep these alive
-# Just clean up the local branch without providing a user option as this causes issues when run alongside gita
-#select yn in "Yes" "No"; do
-#    case $yn in
-#        Yes ) echo "Cleaning up local branch"; git branch -D $1; break;;
-#        No ) break;;
-#    esac
-#done
 }
 
 cleanup_remotebranch () {
@@ -44,13 +36,7 @@ if [[ "$(git branch -a | egrep "remotes/origin/$1" | wc -l)" = "1" ]]; then
     # This code should be called once we are ready to FINISH of a release|hotfix branch -> there should be no reason at that point to keep these alive
     # Just clean up the local branch without providing a user option as this causes issues when run alongside gita  
     echo "Delete the remote branch remotes/origin/$1"
-    git push origin :$1;
-    #select yn in "Yes" "No"; do
-    #    case $yn in
-    #        Yes ) echo "Cleaning up remote branch"; git push origin :$1; break;;
-    #        No ) break;;
-    #    esac
-    #done	
+    git push origin :$1;	
 fi
 }
 
@@ -110,23 +96,11 @@ fi
 
 git checkout $masterBranch
 
-if [[ $branch =~ ^(feature|issue).* ]]; then	
-  # We should never merge into master from this script for a feature|issue -> we can instead use github to do it manually
-  # Here should just always create a pull request
+if [[ $branch =~ ^(feature|issue|hotfix).* ]]; then	
+  # We should never merge into master from this script for a feature|issue|hotfix -> we can instead use github to do it manually
+  # Here should just always create a pull request. In the hotfix case we might actually decide not to merge into master but into a running release
   echo "Create a pull request"
   create_pullrequest $branch; exit 0;
-	#echo "Do you wish to: "
-	#select opt in "Merge to $masterBranch" "Create a pull request"; do
-	#	case $opt in
-	#		"Merge to $masterBranch" ) mergetomaster $masterBranch $branch; break;;
-	#		"Create a pull request" ) create_pullrequest $branch; exit 0; break;;
-	#	esac
-	#done
-# MG: If we have an issue branch we still want to be asked to create a pull request not merge directly into master!?
-#elif [[ $branch =~ ^issue.* ]]; then
-#	echo "Merging to $masterBranch"
-#	git merge --no-ff $branch -m "Resolving issue #$shortBranch"
-#	git push origin $masterBranch
 else
 	mergetomaster $masterBranch $branch
 fi
