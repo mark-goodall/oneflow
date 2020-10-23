@@ -37,3 +37,5 @@ else
 fi
 
 git checkout -b hotfix/$1 $head
+# create remote origin for the local branch
+git push --set-upstream origin hotfix/$1

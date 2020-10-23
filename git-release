@@ -34,3 +34,5 @@ fi
 
 echo Starting release $1
 git checkout -b release/$1 $head
+# create remote origin for the local branch
+git push --set-upstream origin release/$1

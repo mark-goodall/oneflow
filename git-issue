@@ -22,6 +22,8 @@ numericRegex="^[.0-9]+$"
 if [[ "$1" =~ $numericRegex ]] ; then
 	echo Starting issue $1
 	git checkout -b issue/$1 $masterBranch
+	# create remote origin for the local branch
+	git push --set-upstream origin issue/$1
 else
 	echo "Issue names have to be numeric (e.g. the work item id related to them)"
 fi

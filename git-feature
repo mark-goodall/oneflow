@@ -20,3 +20,5 @@ fi
 
 echo Starting feature $1
 git checkout -b feature/$1 $masterBranch
+# create remote origin for the local branch
+git push --set-upstream origin feature/$1
