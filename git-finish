@@ -9,10 +9,6 @@ if [[ "$1" = "--h" ]] ; then
    echo "Finishing up release and hotfix branches: ";
    echo "  - git finish <annotation>";
    echo	"    where annotation is optional";
-   echo ""
-   echo "This command will rebase feature branches, tag release and hotfix branches"
-   echo "and merge them back into $masterBranch."
-   echo "Afterwards, the feature/release/hotfix branch will be cleaned up"
    exit 1;
 fi
 
@@ -79,8 +75,8 @@ if [[ $branch =~ ^(feature|issue).* ]]; then
     echo Pulling latest $masterBranch from origin
 	git pull origin $masterBranch:$masterBranch
 	
-    echo Rebasing branch using $masterBranch
-	git rebase -i $masterBranch		
+    echo Merging $masterBranch into local branch
+  git merge $masterBranch		
 elif [[ $branch =~ ^(release|hotfix).* ]]; then
     echo Tagging release branch
 	
@@ -94,11 +90,7 @@ else
 	exit 1;
 fi
 
-git checkout $masterBranch
-
-if [[ $branch =~ ^(feature|issue|release|hotfix).* ]]; then	
-  # We should never merge into master from this script -> we can instead use github to do it manually
-  # Here should just always create a pull request. 
-  echo "Create a pull request"
-  create_pullrequest $branch; exit 0;
-fi
+# We should never merge into master from this script -> we can instead use github to do it manually
+# Here should just always create a pull request. 
+echo "Create a pull request"
+create_pullrequest $branch; exit 0;
