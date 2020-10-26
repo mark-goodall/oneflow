@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+if [[ "$1" = "--h" ]] ; then
+   echo "Cleaning-up local and remote branches";
+   exit 1;
+fi
+
+if ! [ -d .git ] ; then
+	if ! [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ] ; then
+		echo "Current directory is not a git folder."
+		exit 1;
+	fi
+fi
+
+branch="$1"
+
+
+cleanup_localbranch () {
+echo "Delete the local branch $1"
+git branch -D $1;
+}
+
+cleanup_remotebranch () {
+if [[ "$(git branch -a | egrep "remotes/origin/$1" | wc -l)" = "1" ]]; then
+    # This code should be called once we are ready to FINISH a release|hotfix branch -> there should be no reason at that point to keep these alive
+    # Just clean up the local branch without providing a user option as this causes issues when run alongside gita  
+    echo "Delete the remote branch remotes/origin/$1"
+    git push origin :$1;	
+fi
+}
+
+cleanup_localbranch $branch
+cleanup_remotebranch $branch

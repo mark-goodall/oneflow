@@ -96,22 +96,9 @@ fi
 
 git checkout $masterBranch
 
-if [[ $branch =~ ^(feature|issue).* ]]; then	
-  # We should never merge into master from this script for a feature|issue -> we can instead use github to do it manually
-  # Here should just always create a pull request. In the hotfix case we might actually decide not to merge into master but into a running release
+if [[ $branch =~ ^(feature|issue|release|hotfix).* ]]; then	
+  # We should never merge into master from this script -> we can instead use github to do it manually
+  # Here should just always create a pull request. 
   echo "Create a pull request"
   create_pullrequest $branch; exit 0;
-else
-  if [[ $branch =~ ^(hotfix).* && "$1" =~ ^(release).* ]]; then
-    # if we are finishing a hotfix, there is a chance that we want to merge into the latest release and not master
-    # The $1 parameter represents the release branch name passed as a parameter to the finish cmd
-    git checkout $1
-    mergetomaster $1 $branch
-  else
-    # this is executed for a release branch
-    mergetomaster $masterBranch $branch
-  fi
 fi
-
-cleanup_localbranch $branch
-cleanup_remotebranch $branch
