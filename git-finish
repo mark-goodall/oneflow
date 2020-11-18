@@ -22,27 +22,6 @@ fi
 branch=$(git rev-parse --abbrev-ref HEAD)
 shortBranch=$(echo $branch| cut -d'/' -f 2)
 
-create_pullrequest () {
-originUrl=$(git config --get remote.origin.url)
-
-case $( uname -s ) in
-  Darwin)  open='open';;
-  MINGW*)  open='start';;
-  MSYS*)   open='start';;
-  CYGWIN*) open='cygstart';;
-  *)       open='xdg-open';;
-esac
-
-# Allow printing the url if BROWSER=echo
-if [[ $BROWSER != "echo" ]]; then
-  exec &>/dev/null
-fi
-
-# open it in a browser
-${BROWSER:-$open} "$originUrl"
-
-}
-
 if [[ $branch =~ ^(feature|issue).* ]]; then
     echo Pulling latest $masterBranch from origin
 	git pull origin $masterBranch:$masterBranch
@@ -65,4 +44,6 @@ fi
 # We should never merge into master from this script -> we can instead use github to do it manually
 # Here should just always create a pull request. 
 echo "Create a pull request"
-create_pullrequest $branch; exit 0;
+gh pr create --fill
+
+exit 0;
