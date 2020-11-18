@@ -2,12 +2,12 @@
 set -e
 masterBranch="master"
 
-((!$#)) && echo No feature name, command ignored! && echo "  - git feature <name>" && exit 1
+((!$#)) && echo No feature name, command ignored! && echo "  - git feature <name> <startingPoint>" && exit 1
 
 if [[ "$1" = "--h" ]] ; then
-   echo "Creates a feature branch at the latest commit on $masterBranch and checks it out.";
+   echo "Creates a feature branch at either the latest commit on $masterBranch or when supplied the <startingPoint> and checks it out.";
    echo "Feature branches will create a pull request to $masterBranch when finished."
-   echo "  - git feature <name>";
+   echo "  - git feature <name> <startingPoint>";
    exit 1;
 fi
 
@@ -18,7 +18,15 @@ if ! [ -d .git ] ; then
 	fi
 fi
 
+head=$masterBranch
+if [ "$2" = "" ]; then
+	echo branching from latest commit on $head
+else
+	head=$2
+	echo branching from requested starting point: $head
+fi
+
 echo Starting feature $1
-git checkout -b feature/$1 $masterBranch
+git checkout -b feature/$1 $head
 # create remote origin for the local branch
 git push --set-upstream origin feature/$1
