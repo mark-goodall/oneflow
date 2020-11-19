@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+masterBranch="master"
+
+if [[ "$1" = "--h" ]] ; then
+   echo "Staging branches for pull request: ";
+   echo "  - git finish <target branch>";
+   exit 1;
+fi
+
+if ! [ -d .git ] ; then
+	if ! [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ] ; then
+		echo "Current directory is not a git folder."
+		exit 1;
+	fi
+fi
+
+baseBranch=$masterBranch
+if ! [ "$1" = "" ]; then
+	baseBranch=$1
+fi
+echo Creating pull request to merge into $baseBranch
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+shortBranch=$(echo $branch| cut -d'/' -f 2)
+
+if [[ $branch =~ ^(feature|issue|release|hotfix).* ]]; then
+	echo "Creating pull request"
+	gh pr create --fill --base $baseBranch
+else 
+	echo "Currently not on a feature/issue/release/hotfix branch";
+	exit 1;
+fi
