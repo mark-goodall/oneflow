@@ -3,8 +3,8 @@ set -e
 masterBranch="master"
 
 if [[ "$1" = "--h" ]] ; then
-   echo "Staging branches for pull request: ";
-   echo "  - git finish <target branch>";
+   echo "Submit branches for review: ";
+   echo "  - git review <target branch>";
    exit 1;
 fi
 
