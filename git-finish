@@ -23,7 +23,6 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 shortBranch=$(echo $branch| cut -d'/' -f 2)
 
 if [[ $branch =~ ^(feature|issue).* ]]; then
-	# TODO: do something to finish the branch
 	echo "Nothing to be done for feature/issue branches.";
 elif [[ $branch =~ ^(release|hotfix).* ]]; then
     echo Tagging release branch
@@ -32,7 +31,9 @@ elif [[ $branch =~ ^(release|hotfix).* ]]; then
 		git tag V$shortBranch
 	else
 		git tag -a V$shortBranch -m "$1"
-	fi	
+	fi
+
+	git push --tags
 else 
 	echo "Currently not on a feature/issue/release/hotfix branch";
 	exit 1;
