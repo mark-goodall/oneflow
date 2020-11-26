@@ -24,6 +24,7 @@ shortBranch=$(echo $branch| cut -d'/' -f 2)
 
 if [[ $branch =~ ^(feature|issue).* ]]; then
 	# TODO: do something to finish the branch
+	echo "Nothing to be done for feature/issue branches.";
 elif [[ $branch =~ ^(release|hotfix).* ]]; then
     echo Tagging release branch
 	
