@@ -28,9 +28,9 @@ elif [[ $branch =~ ^(release|hotfix).* ]]; then
     echo Tagging release branch
 	
 	if [ "$1" = "" ]; then
-		git tag V$shortBranch
+		git tag $shortBranch
 	else
-		git tag -a V$shortBranch -m "$1"
+		git tag -a $shortBranch -m "$1"
 	fi
 
 	git push --tags
